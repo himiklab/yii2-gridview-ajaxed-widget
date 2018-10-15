@@ -1,0 +1,26 @@
+{
+    "name": "himiklab/yii2-gridview-ajaxed-widget",
+    "description": "Improved Yii2 GridView widget with support ajax, pjax and modal (Bootstrap)",
+    "keywords": ["yii2", "grid", "ajax", "modal", "GridView", "pjax", "Bootstrap"],
+    "type": "yii2-extension",
+    "license": "MIT",
+    "support": {
+        "source": "https://github.com/himiklab/yii2-gridview-ajaxed-widget",
+        "issues": "https://github.com/himiklab/yii2-gridview-ajaxed-widget/issues"
+    },
+    "authors": [
+        {
+            "name": "HimikLab",
+            "homepage": "https://github.com/himiklab"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+        "yiisoft/yii2-bootstrap": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "himiklab\\yii2\\ajaxedgrid\\": ""
+        }
+    }
+}
