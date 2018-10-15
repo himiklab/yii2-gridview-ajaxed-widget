@@ -239,7 +239,8 @@ const widgetShow = function (widgetId) {
     };
 
     // modal form show
-    grid.on("click", "a[data-action='modal-form']", function () {
+    grid.on("click", "a[data-action='modal-form']", function (e) {
+        e.preventDefault();
         jQuery("div.modal-body", modal).load(jQuery(this).data("remote"));
         modal.modal("show");
     });
