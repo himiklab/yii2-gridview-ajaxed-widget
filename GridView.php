@@ -286,12 +286,9 @@ const widgetShow = function (widgetId) {
     // submit form action
     modal.on("beforeSubmit", "form", function () {
         const form = jQuery(this);
-        if (form.find(".has-error").length) {
-            return false;
-        }
+        const formSpinner = jQuery("#form-spinner", modal);
 
         jQuery("button[type='submit']", form).prop("disabled", true);
-        const formSpinner = jQuery("#form-spinner", modal);
         if (formSpinner.length) {
             formSpinner.addClass("fa fa-2x fa-spinner fa-pulse");
         }
