@@ -65,6 +65,9 @@ class GridView extends BaseGridView
     /** @var array Config for modal widget. */
     public $modalConfig = ['size' => Modal::SIZE_LARGE];
 
+    /** @var string */
+    public $jsErrorCallback;
+
     public function init()
     {
         if (!$this->readOnly && $this->actionColumnEnabled) {
@@ -228,7 +231,7 @@ const b64toBlob = function (b64Data, contentType, sliceSize) {
     return new Blob(byteArrays, {type: contentType});
 };
 
-const widgetShow = function (widgetId) {
+const widgetShow = function (widgetId, errorCallback) {
     const grid = jQuery("#" + widgetId + "-ajaxed-grid");
     const modal = jQuery("#" + widgetId + "-modal");
     const modalHide = function () {
@@ -261,6 +264,9 @@ const widgetShow = function (widgetId) {
                     }
 
                     gridReload();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    errorCallback(jqXHR, textStatus, errorThrown);
                 }
             });
         }
@@ -309,8 +315,9 @@ const widgetShow = function (widgetId) {
                 modalHide();
                 gridReload();
             },
-            error: function () {
+            error: function (jqXHR, textStatus, errorThrown) {
                 modalHide();
+                errorCallback(jqXHR, textStatus, errorThrown);
             }
         });
 
@@ -353,7 +360,16 @@ JS
         }
 
         $widgetId = $this->id;
-        $view->registerJs("widgetShow(\"{$widgetId}\");");
+        $jsErrorCallback = $this->jsErrorCallback;
+        $view->registerJs(<<<JS
+widgetShow("{$widgetId}", function(jqXHR, textStatus, errorThrown) {
+    const jsErrorCallback = "{$jsErrorCallback}";
+    if (jsErrorCallback !== "") {
+        eval("(" + jsErrorCallback + ")(jqXHR, textStatus, errorThrown)");
+    }
+});
+JS
+        );
         static::$isWidgetFirst = false;
     }
 }

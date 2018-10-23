@@ -37,6 +37,7 @@ GridView::widget([
         'language',
         'visible:boolean',
     ],
+    'jsErrorCallback' => 'function(jqXHR, textStatus) {console.log(jqXHR, textStatus, errorThrown)}',
 ]);
 ```
 
