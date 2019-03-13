@@ -329,7 +329,6 @@ const widgetShow = function (widgetId, errorCallback) {
             window.location.href = window.location.href.replace("#", "");
         } else if (message.substring(0, 7) === "#alert ") {
             alert(message.substring(7));
-            return true;
         } else if (message.substring(0, 10) === "#redirect ") {
             window.location.href = message.substring(10);
         } else if (message.substring(0, 6) === "#file ") {
@@ -345,10 +344,11 @@ const widgetShow = function (widgetId, errorCallback) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            return true;
+        } else {
+            return false;
         }
 
-        return false;
+        return true;
     };
 
     modal.on("hidden.bs.modal", modal, function () {
