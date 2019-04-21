@@ -1,7 +1,7 @@
 <?php
 /**
  * @link https://github.com/himiklab/yii2-gridview-ajaxed-widget
- * @copyright Copyright (c) 2014-2018 HimikLab
+ * @copyright Copyright (c) 2014-2019 HimikLab
  * @license http://opensource.org/licenses/MIT MIT
  */
 
@@ -67,6 +67,9 @@ class GridView extends BaseGridView
 
     /** @var string */
     public $jsErrorCallback;
+
+    /** @var string */
+    public $jsAlertCallback;
 
     public function init()
     {
@@ -231,7 +234,7 @@ const b64toBlob = function (b64Data, contentType, sliceSize) {
     return new Blob(byteArrays, {type: contentType});
 };
 
-const widgetShow = function (widgetId, errorCallback) {
+const widgetShow = function (widgetId, errorCallback, alertCallback) {
     const grid = jQuery("#" + widgetId + "-ajaxed-grid");
     const modal = jQuery("#" + widgetId + "-modal");
     const modalHide = function () {
@@ -328,7 +331,7 @@ const widgetShow = function (widgetId, errorCallback) {
         if (message === "#reload") {
             window.location.href = window.location.href.replace("#", "");
         } else if (message.substring(0, 7) === "#alert ") {
-            alert(message.substring(7));
+            alertCallback(message.substring(7));
         } else if (message.substring(0, 10) === "#redirect ") {
             window.location.href = message.substring(10);
         } else if (message.substring(0, 6) === "#file ") {
@@ -360,12 +363,19 @@ JS
         }
 
         $widgetId = $this->id;
-        $jsErrorCallback = $this->jsErrorCallback;
         $view->registerJs(<<<JS
+"use strict";
+const jsErrorCallback = "{$this->jsErrorCallback}";
+const jsAlertCallback = "{$this->jsAlertCallback}";
 widgetShow("{$widgetId}", function(jqXHR, textStatus, errorThrown) {
-    const jsErrorCallback = "{$jsErrorCallback}";
-    if (jsErrorCallback !== "") {
+    if (jsErrorCallback) {
         eval("(" + jsErrorCallback + ")(jqXHR, textStatus, errorThrown)");
+    }
+}, function(message) {
+    if (jsAlertCallback) {
+        eval("(" + jsAlertCallback + ")(message)");
+    } else {
+        alert(message);
     }
 });
 JS
