@@ -41,10 +41,13 @@ class GridView extends BaseGridView
     /** @var string */
     public $actionColumnTemplate = '{update} {delete}';
 
-    /** @var array @see ActionColumn::buttons. */
+    /**
+     * @var array
+     * @see ActionColumn::buttons.
+     */
     public $actionColumnAdditionButtons = [];
 
-    /** @var array Default Default buttons to add. */
+    /** @var array Default buttons to add. */
     public $addButtons = ['Добавить'];
 
     /** @var string */
@@ -208,10 +211,9 @@ if (jQuery.pjax.defaults.timeout < {$pjaxTimeout}) {
 JS
             );
 
-            $view->registerJs(<<<JS
+            $view->registerJs(<<<'JS'
 "use strict";
-jQuery.fn.modal.Constructor.prototype.enforceFocus = function () {
-}; // select2 modal fix
+jQuery.fn.modal.Constructor.prototype.enforceFocus = function () {}; // select2 modal fix
 
 // https://github.com/jeremybanks/b64-to-blob
 const b64toBlob = function (b64Data, contentType, sliceSize) {
@@ -224,7 +226,7 @@ const b64toBlob = function (b64Data, contentType, sliceSize) {
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
         const slice = byteCharacters.slice(offset, offset + sliceSize);
         const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
+        for (let i = 0; i < slice.length; ++i) {
             byteNumbers[i] = slice.charCodeAt(i);
         }
 
@@ -275,7 +277,7 @@ const widgetShow = function (widgetId, errorCallback, alertCallback) {
         }
     });
 
-    // submit form action
+    // before submit form action
     modal.on("click", "button[type='submit']", function (e) {
         const form = jQuery("form", modal);
         if (form.attr("id") === "w0") {
@@ -283,9 +285,10 @@ const widgetShow = function (widgetId, errorCallback, alertCallback) {
             form.yiiActiveForm();
         }
 
-        const confirmMessage = jQuery(this).data("confirm-message");
-        if (confirmMessage && e.originalEvent) {
-            if (!confirm(confirmMessage)) {
+        if (e.originalEvent) {
+            const button = jQuery(this);
+            const confirmMessage = button.data("confirm-message");
+            if (confirmMessage && !confirm(confirmMessage)) {
                 e.preventDefault();
                 modalHide();
             }
