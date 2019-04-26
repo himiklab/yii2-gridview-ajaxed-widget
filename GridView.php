@@ -368,13 +368,13 @@ JS
         $widgetId = $this->id;
         $view->registerJs(<<<JS
 "use strict";
-const jsErrorCallback = "{$this->jsErrorCallback}";
-const jsAlertCallback = "{$this->jsAlertCallback}";
 widgetShow("{$widgetId}", function(jqXHR, textStatus, errorThrown) {
+    const jsErrorCallback = "{$this->jsErrorCallback}";
     if (jsErrorCallback) {
         eval("(" + jsErrorCallback + ")(jqXHR, textStatus, errorThrown)");
     }
 }, function(message) {
+    const jsAlertCallback = "{$this->jsAlertCallback}";
     if (jsAlertCallback) {
         eval("(" + jsAlertCallback + ")(message)");
     } else {
