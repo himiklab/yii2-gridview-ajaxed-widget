@@ -249,7 +249,9 @@ const widgetShow = function (widgetId, errorCallback, alertCallback) {
     // modal form show
     grid.on("click", "a[data-action='modal-form']", function (e) {
         e.preventDefault();
-        jQuery("div.modal-body", modal).load(jQuery(this).data("remote"));
+        jQuery("div.modal-body", modal).load(jQuery(this).data("remote"), jQuery(this).data("post"), function() {
+          modal.trigger('app.modal.loaded');
+        });
         modal.modal("show");
     });
 
