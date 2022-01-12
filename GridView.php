@@ -87,12 +87,15 @@ class GridView extends BaseGridView
 
     public function run()
     {
+        $widgetId = $this->id;
         if ($this->readOnly) {
+            Pjax::begin(['id' => "{$widgetId}-pjax", 'timeout' => static::$pjaxTimeout]);
             parent::run();
+            Pjax::end();
+
             return;
         }
 
-        $widgetId = $this->id;
         echo "<div id=\"{$widgetId}-ajaxed-grid\">" . PHP_EOL . '<p>' . PHP_EOL;
         foreach ($this->addButtons as $key => $value) {
             echo Html::a(
